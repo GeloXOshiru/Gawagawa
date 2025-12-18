@@ -1,5 +1,4 @@
 local Library = {}
-
 function Library:CreateWindow(AKIMBORATSKIE)
 	local ScreenGui = Instance.new("ScreenGui", game.Players.LocalPlayer:WaitForChild("PlayerGui"))
 	ScreenGui.Name = title .. "Gui"
