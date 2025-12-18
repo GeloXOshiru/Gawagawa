@@ -1,30 +1,36 @@
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/HasrnXzeee/N/refs/heads/main/Image.png", true))()
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-local startTime = os.time()
-local startRebirths = player.leaderstats.Rebirths.Value
-local displayName = player.DisplayName
+--
+local TabLabel = Instance.new("TextLabel", MainFrame)
+TabLabel.Text = "MAIN TAB"
+TabLabel.Size = UDim2.new(1, 0, 0, 30)
+TabLabel.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+TabLabel.TextColor3 = Color3.new(1, 1, 1)
 
--- Create Main Window
-local window = library:AddWindow("TMB || Priv Script", {
-    main_color = Color3.fromRGB(0, 0, 0),
-    min_size = Vector2.new(670, 1000),
-    can_resize = true,
-})
--- Replace "RebirthEventName" with the actual name used in your game
--- Common locations: ReplicatedStorage.Events, ReplicatedStorage.Remotes
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local rebirthEvent = ReplicatedStorage:WaitForChild("Rebirth") -- Example name
+     Auto-Punch Toggle Logic
+local autoPunchEnabled = false
+local ToggleBtn = Instance.new("TextButton", MainFrame)
+ToggleBtn.Text = "Auto Punch: OFF"
+ToggleBtn.Size = UDim2.new(0.8, 0, 0, 40)
+ToggleBtn.Position = UDim2.new(0.1, 0, 0.4, 0)
+ToggleBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+ToggleBtn.TextColor3 = Color3.new(1, 1, 1)
 
-local autoRebirthEnabled = true
+ToggleBtn.MouseButton1Click:Connect(function()
+    autoPunchEnabled = not autoPunchEnabled
+    ToggleBtn.Text = autoPunchEnabled and "Auto Punch: ON" or "Auto Punch: OFF"
+    ToggleBtn.BackgroundColor3 = autoPunchEnabled and Color3.fromRGB(0, 150, 0) or Color3.fromRGB(60, 60, 60)
+end)
 
+    Execution Loop
 task.spawn(function()
-    while autoRebirthEnabled do
-        -- Most games require a RemoteEvent call to the server
-        rebirthEvent:FireServer()
-        
-        -- A small wait prevents the script from crashing the game
-        task.wait(1) 
+    while true do
+        if autoPunchEnabled then
+            -- Replace 'PunchEvent' with your game's actual RemoteEvent name
+            local punchEvent = ReplicatedStorage:FindFirstChild("Punch") or ReplicatedStorage:FindFirstChild("Attack")
+            if punchEvent then
+                punchEvent:FireServer()
+            end
+        end
+        task.wait(0.5) -- Adjust speed here
     end
 end)
