@@ -1,65 +1,62 @@
--- Roblox UI Script (LocalScript)
-local Player = game.Players.LocalPlayer
-local PlayerGui = Player:WaitForChild("StarterGui")
+local Library = {}
 
--- 1. Create the ScreenGui
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "AKIMBORATSKIE"
-screenGui.Parent = Player.PlayerGui
-screenGui.ResetOnSpawn = false
-
--- 2. Create the Main Frame
-local mainFrame = Instance.new("Frame")
-mainFrame.Name = "MainFrame"
-mainFrame.Size = UDim2.new(0, 300, 0, 400)
-mainFrame.Position = UDim2.new(0.5, -150, 0.5, -200)
-mainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-mainFrame.BorderSizePixel = 0
-mainFrame.Visible = false -- Hidden by default
-mainFrame.Active = true
-mainFrame.Draggable = true -- Allows player to move the UI
-mainFrame.Parent = screenGui
-
--- Add rounded corners
-local uiCorner = Instance.new("UICorner")
-uiCorner.CornerRadius = UDim.new(0, 10)
-uiCorner.Parent = mainFrame
-
--- 3. Create a Title Label
-local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, 0, 0, 50)
-title.BackgroundTransparency = 1
-title.Text = "MENU"
-title.TextColor3 = Color3.fromRGB(255, 255, 255)
-title.TextSize = 20
-title.Font = Enum.Font.GothamBold
-title.Parent = mainFrame
-
--- 4. Create a Toggle Button (Stays on screen)
-local toggleBtn = Instance.new("TextButton")
-toggleBtn.Name = "Toggle"
-toggleBtn.Size = UDim2.new(0, 100, 0, 40)
-toggleBtn.Position = UDim2.new(0, 20, 0.8, 0)
-toggleBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
-toggleBtn.Text = "Open Menu"
-toggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-toggleBtn.Parent = screenGui
-
-local btnCorner = Instance.new("UICorner")
-btnCorner.CornerRadius = UDim.new(0, 8)
-btnCorner.Parent = toggleBtn
-
--- 5. Functionality: Open/Close Logic
-toggleBtn.MouseButton1Click:Connect(function()
-	mainFrame.Visible = not mainFrame.Visible
+function Library:CreateWindow(AKIMBORATSKIE)
+	local ScreenGui = Instance.new("ScreenGui", game.Players.LocalPlayer:WaitForChild("PlayerGui"))
+	ScreenGui.Name = title .. "Gui"
 	
-	if mainFrame.Visible then
-		toggleBtn.Text = "Close Menu"
-		toggleBtn.BackgroundColor3 = Color3.fromRGB(255, 85, 85)
-	else
-		toggleBtn.Text = "Open Menu"
-		toggleBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
-	end
-end)
+	local MainFrame = Instance.new("Frame", ScreenGui)
+	MainFrame.Name = "MGA SUPOT"
+	MainFrame.Size = UDim2.new(0, 200, 0, 250)
+	MainFrame.Position = UDim2.new(0.5, -100, 0.5, -125)
+	MainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+	MainFrame.BorderSizePixel = 0
+	
+	local TitleLabel = Instance.new("TextLabel", MainFrame)
+	TitleLabel.Size = UDim2.new(1, 0, 0, 30)
+	TitleLabel.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+	TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+	TitleLabel.Text = title
+	TitleLabel.Font = Enum.Font.GothamBold
+	
+	local ContentFrame = Instance.new("Frame", MainFrame)
+	ContentFrame.Name = "Content"
+	ContentFrame.Position = UDim2.new(0, 0, 0, 35)
+	ContentFrame.Size = UDim2.new(1, 0, 1, -35)
+	ContentFrame.BackgroundTransparency = 1
+	
+	local UIListLayout = Instance.new("UIListLayout", ContentFrame)
+	UIListLayout.Padding = UDim.new(0, 5)
+	UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 
-print("UI Script Loaded Successfully")
+	local Tab = {}
+	function Tab:AddButton(text, callback)
+		local Button = Instance.new("TextButton", ContentFrame)
+		Button.Size = UDim2.new(0.9, 0, 0, 30)
+		Button.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+		Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+		Button.Text = text
+		Button.BorderSizePixel = 0
+		
+		Button.MouseButton1Click:Connect(function()
+			pcall(callback)
+		end)
+	end
+	
+	return Tab
+end
+
+-- local Players = game:GetService("Players")
+local localPlayer = Players.LocalPlayer
+local maxDistance = 10 -- How close they must be to punch
+
+RunService.Heartbeat:Connect(function()
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= localPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            local distance = (player.Character.HumanoidRootPart.Position - localPlayer.Character.HumanoidRootPart.Position).Magnitude
+            if distance <= maxDistance then
+                -- Trigger your punch event here
+                print("Target in range: " .. player.Name)
+            end
+        end
+    end
+end)
