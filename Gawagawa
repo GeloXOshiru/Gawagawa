@@ -1,0 +1,118 @@
+-- Services
+local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+
+local player = Players.LocalPlayer
+
+-- ScreenGui
+local gui = Instance.new("ScreenGui")
+gui.Name = "Jelo Hub | Paid Version"
+gui.Parent = player:WaitForChild("PlayerGui")
+
+-- Main Frame
+local main = Instance.new("Frame")
+main.Size = UDim2.new(0, 420, 0, 260)
+main.Position = UDim2.new(0.5, -210, 0.5, -130)
+main.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+main.BorderSizePixel = 0
+main.Parent = gui
+
+-- Rounded corners
+local mainCorner = Instance.new("UICorner")
+mainCorner.CornerRadius = UDim.new(0, 16)
+mainCorner.Parent = main
+
+-- Top Bar
+local topBar = Instance.new("Frame")
+topBar.Size = UDim2.new(1, 0, 0, 40)
+topBar.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+topBar.BorderSizePixel = 0
+topBar.Parent = main
+
+local barCorner = Instance.new("UICorner")
+barCorner.CornerRadius = UDim.new(0, 16)
+barCorner.Parent = topBar
+
+-- Title
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, -20, 1, 0)
+title.Position = UDim2.new(0, 10, 0, 0)
+title.BackgroundTransparency = 1
+title.Text = "GAMING PANEL"
+title.TextColor3 = Color3.fromRGB(0, 255, 170)
+title.TextSize = 22
+title.Font = Enum.Font.GothamBold
+title.TextXAlignment = Left
+title.Parent = topBar
+
+-- Button
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(0, 240, 0, 55)
+button.Position = UDim2.new(0.5, -120, 0.5, -10)
+button.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+button.Text = "ACTIVATE"
+button.TextSize = 20
+button.TextColor3 = Color3.new(1,1,1)
+button.Font = Enum.Font.GothamBold
+button.Parent = main
+
+-- Button corner
+local btnCorner = Instance.new("UICorner")
+btnCorner.CornerRadius = UDim.new(0, 12)
+btnCorner.Parent = button
+
+-- Button Glow
+local stroke = Instance.new("UIStroke")
+stroke.Color = Color3.fromRGB(0, 255, 255)
+stroke.Thickness = 2
+stroke.Parent = button
+
+-- Hover Animation
+button.MouseEnter:Connect(function()
+	TweenService:Create(button, TweenInfo.new(0.15), {
+		BackgroundColor3 = Color3.fromRGB(0, 200, 255),
+		Size = UDim2.new(0, 255, 0, 60)
+	}):Play()
+end)
+
+button.MouseLeave:Connect(function()
+	TweenService:Create(button, TweenInfo.new(0.15), {
+		BackgroundColor3 = Color3.fromRGB(0, 170, 255),
+		Size = UDim2.new(0, 240, 0, 55)
+	}):Play()
+end)
+
+-- Click Action
+button.MouseButton1Click:Connect(function()
+	print("Activated!")
+end)
+
+-- Draggable UI
+local dragging, dragInput, dragStart, startPos
+
+topBar.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = true
+		dragStart = input.Position
+		startPos = main.Position
+	end
+end)
+
+topBar.InputEnded:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = false
+	end
+end)
+
+UIS.InputChanged:Connect(function(input)
+	if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+		local delta = input.Position - dragStart
+		main.Position = UDim2.new(
+			startPos.X.Scale,
+			startPos.X.Offset + delta.X,
+			startPos.Y.Scale,
+			startPos.Y.Offset + delta.Y
+		)
+	end
+end)
